@@ -190,6 +190,15 @@ from .gen.salesforce_service_pb2 import (
 )
 from .gen.sentry_service_pb2 import (
     SentryModeState,
+    Event,
+    EventType,
+    EventThreatLevel,
+    EventGeoLocation,
+    Media,
+    MediaInfo,
+    MediaFormat,
+    MediaSource,
+    MediaType,
     GetEventResponse,
     GetEventsResponse,
 )
@@ -1273,7 +1282,7 @@ class LucidAPI:
 
     async def get_sentry_events(
         self,
-        vehicle_id: str,
+        vehicle: Vehicle | str,
         start_time_utc: datetime,
         end_time_utc: datetime,
         offset: int = 0,
@@ -1281,7 +1290,11 @@ class LucidAPI:
     ) -> GetEventsResponse:
         """
         Get all sentry events for a specific vehicle.
+
+        Takes the Vehicle, like the other vehicle calls, or its vehicle_id.
         """
+
+        vehicle_id = vehicle if isinstance(vehicle, str) else vehicle.vehicle_id
 
         start_time_utc_pb = Timestamp()
         end_time_utc_pb = Timestamp()
